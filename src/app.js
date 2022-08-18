@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const http = require('http');
 
+const routes = require('./routes/index');
 const app = express();
 const server = http.Server(app);
 dotenv.config();
