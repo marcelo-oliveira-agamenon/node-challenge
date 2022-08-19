@@ -15,11 +15,34 @@
   },
   "security": [{ "bearerAuth": [] }],
   "paths": {
+    "/api/token": {
+      "get": {
+        "operationId": "fetch API token",
+        "summary": "Get an JWT token",
+        "produces": ["application/json"],
+        "tags": ["Token"],
+        "responses": {
+          "200": {
+            "description": "200 success creating an JWT token",
+            "examples": {
+              "application/json": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJzdHJpbmdQYXlsb2FkVG9rZW4iLCJpYXQiOjE2NjA5NDc2MDQsImV4cCI6MTY2MTM3OTYwNH0.2wsS3lnQegqWYhNQLrBfi1-vQjFsnjdd3PhIB-GMUkI\"\n}"
+            }
+          },
+          "500": {
+            "description": "500 internal server error",
+            "examples": {
+              "application/json": "{ \"error\": \"Error creating JWT token\" }"
+            }
+          }
+        }
+      }
+    },
     "/api/posts": {
       "get": {
         "operationId": "fetchPosts",
         "summary": "List all posts from database",
         "produces": ["application/json"],
+        "tags": ["Post"],
         "parameters": [
           {
             "name": "page",
@@ -69,6 +92,7 @@
         "operationId": "createPost",
         "summary": "Insert one post in database",
         "produces": ["application/json"],
+        "tags": ["Post"],
         "parameters": [
           {
             "name": "Post",
@@ -106,6 +130,7 @@
         "operationId": "fetchOnePost",
         "summary": "List one post from database",
         "produces": ["application/json"],
+        "tags": ["Post"],
         "responses": {
           "200": {
             "description": "200 success list post",
@@ -131,6 +156,7 @@
         "operationId": "editOnePost",
         "summary": "Edit one post from database",
         "produces": ["application/json"],
+        "tags": ["Post"],
         "parameters": [
           {
             "name": "Post",
@@ -166,6 +192,7 @@
         "operationId": "deleteOnePost",
         "summary": "Delete one post from database",
         "produces": ["application/json"],
+        "tags": ["Post"],
         "responses": {
           "200": {
             "description": "200 success editing post",

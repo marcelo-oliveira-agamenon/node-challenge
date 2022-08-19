@@ -12,6 +12,10 @@ module.exports = {
       }
     );
 
+    if (!token) {
+      return res.status(500).json({ error: 'Error creating JWT token' });
+    }
+
     return res.status(200).json({
       token,
     });
