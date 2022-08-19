@@ -3,6 +3,11 @@ const post = require('../models/postModel');
 module.exports = {
   async fetchAll(req, res) {
     let page = req.query.page;
+    let limit = req.query.limit;
+
+    if (!page || !limit) {
+      return res.status(403).json({ error: 'Missing page or limit parameter' });
+    }
 
     if (page >>> 0 !== parseFloat(page)) {
       page = 1;
@@ -10,10 +15,14 @@ module.exports = {
 
     const users = await post
       .find({})
-      .skip((page - 1) * 5)
-      .limit(5);
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    return res.status(200).json(users);
+    if (users) {
+      return res.status(200).json(users);
+    }
+
+    return res.status(500).json({ error: 'Internal server error' });
   },
 
   async fetchOne(req, res) {
@@ -72,12 +81,12 @@ module.exports = {
   async deletePost(req, res) {
     const postId = req.params.id;
 
-    const localPost = post.findByIdAndDelete(postId);
+    const localPost = await post.findByIdAndDelete(postId);
 
     if (localPost) {
       return res.status(200).json({ message: 'Post deleted' });
     }
 
-    return res.status(500).json({ error: 'Error delete post in database' });
+    return res.status(500).json({ error: 'Error deleting post in database' });
   },
 };
