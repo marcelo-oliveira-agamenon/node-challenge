@@ -1,0 +1,234 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Fuerza Studio Challenge API",
+    "version": "v1"
+  },
+  "schemes": ["http"],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey",
+      "description": "JWT Authorization header"
+    }
+  },
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/api/token": {
+      "get": {
+        "operationId": "fetch API token",
+        "summary": "Get an JWT token",
+        "produces": ["application/json"],
+        "tags": ["Token"],
+        "responses": {
+          "200": {
+            "description": "200 success creating an JWT token",
+            "examples": {
+              "application/json": "{\n\t\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJzdHJpbmdQYXlsb2FkVG9rZW4iLCJpYXQiOjE2NjA5NDc2MDQsImV4cCI6MTY2MTM3OTYwNH0.2wsS3lnQegqWYhNQLrBfi1-vQjFsnjdd3PhIB-GMUkI\"\n}"
+            }
+          },
+          "500": {
+            "description": "500 internal server error",
+            "examples": {
+              "application/json": "{ \"error\": \"Error creating JWT token\" }"
+            }
+          }
+        }
+      }
+    },
+    "/api/posts": {
+      "get": {
+        "operationId": "fetchPosts",
+        "summary": "List all posts from database",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "pagination",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum number of results to return",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 success list all posts",
+            "examples": {
+              "application/json": "[\n\t{\n\t\t\"_id\": \"0cfd48a9-d613-4cab-9707-13e05eab1c9a\",\n\t\t\"title\": \"title post 2\",\n\t\t\"body\": \"lorem ipsum\",\n\t\t\"tags\": [\n\t\t\t\"tag1\",\n\t\t\t\"tag2\"\n\t\t],\n\t\t\"__v\": 0\n\t},\n\t{\n\t\t\"_id\": \"1ce7d8f5-35fb-4552-b8f5-0b9d07e62f40\",\n\t\t\"title\": \"title post 3\",\n\t\t\"body\": \"lorem ipsum\",\n\t\t\"tags\": [\n\t\t\t\"tag1\",\n\t\t\t\"tag2\"\n\t\t],\n\t\t\"__v\": 0\n\t}\n]"
+            }
+          },
+          "500": {
+            "description": "500 internal server error",
+            "examples": {
+              "application/json": "{ \"error\": \"Internal server error\" }"
+            }
+          },
+          "403": {
+            "description": "403 missing page or limit parameter",
+            "examples": {
+              "application/json": "{ \"error\": \"Missing page or limit parameter\" }"
+            }
+          },
+          "401": {
+            "description": "401 Unauthorized",
+            "examples": {
+              "application/json": "{ \"message\": \"Access Denied\" }"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPost",
+        "summary": "Insert one post in database",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "Post",
+            "in": "body",
+            "description": "Post to create",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "201 success create post",
+            "examples": {
+              "application/json": "{\n\t\"title\": \"title post 1\",\n\t\"body\": \"lorem ipsum\",\n\t\"tags\": [\n\t\t\"tag1\",\n\t\t\"tag2\"\n\t],\n\t\"_id\": \"b304157c-8752-4d8d-b8e5-3acdde6e56c5\",\n\t\"__v\": 0\n}"
+            }
+          },
+          "403": {
+            "description": "403 missing data on body request",
+            "examples": {
+              "application/json": "{ \"error\": \"Missing data on body request\" }"
+            }
+          },
+          "500": {
+            "description": "500 internal server error",
+            "examples": {
+              "application/json": "{ \"error\": \"Error insert post in database\" }"
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/:id": {
+      "get": {
+        "operationId": "fetchOnePost",
+        "summary": "List one post from database",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "responses": {
+          "200": {
+            "description": "200 success list post",
+            "examples": {
+              "application/json": "{\n\t\"_id\": \"0cfd48a9-d613-4cab-9707-13e05eab1c9a\",\n\t\"title\": \"title post 2\",\n\t\"body\": \"lorem ipsum\",\n\t\"tags\": [\n\t\t\"tag1\",\n\t\t\"tag2\"\n\t],\n\t\"__v\": 0\n}"
+            }
+          },
+          "404": {
+            "description": "404 post not found",
+            "examples": {
+              "application/json": "{ \"error\": \"Post not found\" }"
+            }
+          },
+          "401": {
+            "description": "401 Unauthorized",
+            "examples": {
+              "application/json": "{ \"message\": \"Access Denied\" }"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "editOnePost",
+        "summary": "Edit one post from database",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "Post",
+            "in": "body",
+            "description": "Post to edit",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 success editing post",
+            "examples": {
+              "application/json": "{\n\t\"_id\": \"0cfd48a9-d613-4cab-9707-13e05eab1c9a\",\n\t\"title\": \"title post 2\",\n\t\"body\": \"lorem ipsum\",\n\t\"tags\": [\n\t\t\"tag1\",\n\t\t\"tag2\"\n\t],\n\t\"__v\": 0\n}"
+            }
+          },
+          "403": {
+            "description": "403 missing data on body request",
+            "examples": {
+              "application/json": "{ \"error\": \"Missing data on body request\" }"
+            }
+          },
+          "500": {
+            "description": "500 internal server error",
+            "examples": {
+              "application/json": "{ \"error\": \"Error editing post in database\" }"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteOnePost",
+        "summary": "Delete one post from database",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "responses": {
+          "200": {
+            "description": "200 success editing post",
+            "examples": {
+              "application/json": "{ \"message\": \"Post deleted\" }"
+            }
+          },
+          "500": {
+            "description": "500 internal server error",
+            "examples": {
+              "application/json": "{ \"error\": \"Error deleting post in database\" }"
+            }
+          }
+        }
+      }
+    }
+  },
+  "consumes": ["application/json"],
+  "definitions": {
+    "Post": {
+      "type": "object",
+      "required": ["title", "body", "tags"],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
