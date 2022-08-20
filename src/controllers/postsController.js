@@ -44,6 +44,9 @@ module.exports = {
       return res.status(403).json({ error: 'Missing data on body request' });
     }
 
+    if (title.length < 3 || body.length < 3) {
+    }
+
     const createdPost = await post.create({
       title,
       body,
