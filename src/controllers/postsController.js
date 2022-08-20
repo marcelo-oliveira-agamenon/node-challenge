@@ -75,7 +75,7 @@ module.exports = {
     });
 
     if (editedPost) {
-      return res.status(200).json({ ...editedPost, title, body, tags });
+      return res.status(200).json(editedPost);
     }
 
     return res.status(500).json({ error: 'Error editing post in database' });
